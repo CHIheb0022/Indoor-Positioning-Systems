@@ -1,0 +1,21 @@
+#Last Commit Updates :
+
+# Area mangment: we can get ride of the new area button and make it a text form
+-->Done 
+# When Scannig an area we enter the Area name > create a Table with the name of the area 
+-->Done
+# expand the data base to accept more than one Table (one table per area)
+-->Done
+# Fuse the where am i ? button with the Compute position button
+-->Done
+# Separate the scan area frame from the rest of the parameters  
+-->Done
+# Modularity and integrity (function and modules responsability mangments)
+-->In progress
+# Log file configuration to track data base infos   
+-->Frozen: it's not a priority
+# The pop out window showing the postion: improve the design 
+--> Frozen: nothing to add, we can show the result in a text form within the main app frame 
+
+### Basically, and in addition to the enhacement mentioned i have reshaped the APP's GUI as well as  
+setting access permission for administrators in order to manage the database.
