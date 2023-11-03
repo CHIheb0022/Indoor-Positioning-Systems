@@ -29,6 +29,28 @@ The Indoor Positioning App is designed to help you define indoor environments, r
 
 2. **Admin Mode**: If you have admin access, you can perform additional actions such as viewing and managing the database. Admin access requires a login and password.
 
+## Screenshots
+
+### Fingerprint Technique
+
+![Fingerprint Technique](Finger_Print_Technique/Images/GUI.png)
+
+*This image illustrates the concept of fingerprint-based indoor localization.*
+
+### Application GUI
+
+![Application GUI](Finger_Print_Technique/Images/fingerprinting technique for indoor localisation.png)
+
+*This screenshot shows the graphical user interface of the application.*
+
+---
+
+**Note:** This README provides an overview of the application's features. For detailed instructions, please refer to the user guide within the application.
+
+For admin access, use the provided login and password to access the admin section.
+
+Enjoy using the Fingerprint-Based Indoor Localization Application!
+
 ## Standalone Executable
 
 This application has been bundled as a standalone executable (.exe) file using PyInstaller. To run the executable:
