@@ -33,7 +33,7 @@ The Indoor Positioning App is designed to help you define indoor environments, r
 
 ### Fingerprint Technique
 
-![Fingerprint Technique](Finger_Print_Technique/Images/fingerprinting technique for indoor localisation.png)
+![Fingerprint Technique](Finger_Print_Technique/Images/fingerprinting_technique_for_indoor_localisation.png)
 
 *This image illustrates the concept of fingerprint-based indoor localization.*
 
