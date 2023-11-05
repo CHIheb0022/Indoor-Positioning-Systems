@@ -71,11 +71,11 @@ def store_fingerprint(conn,cur,iface,Area_name,RP_location,RP_ID):
 
     # Create a table specific to the Area to store Wi-Fi fingerprints (if it doesn't exist)
     cur.execute(f'''CREATE TABLE IF NOT EXISTS {Area_name}
-                  (location_x INTEGER ,location_y INTEGER , bssid TEXT, ssid TEXT, signal_strength TEXT, nom TEXT)''')
-    conn.commit()
+              (nom TEXT, location_x REAL, location_y REAL, bssid TEXT, ssid TEXT, signal_strength TEXT,
+               PRIMARY KEY (nom, location_x, location_y))''')
     
-    cur.execute(f'''INSERT INTO {Area_name} (location_x, location_y, bssid, ssid, signal_strength, nom) 
-                      VALUES (?, ?, ?, ?, ?, ?)''', (RP_location[0], RP_location[1], bssid, ssid, rssi_values_str, RP_ID))
+    cur.execute(f'''INSERT INTO {Area_name} (nom, location_x, location_y, bssid, ssid, signal_strength) 
+                      VALUES (?, ?, ?, ?, ?, ?)''', (RP_ID, RP_location[0], RP_location[1], bssid, ssid, rssi_values_str))
     conn.commit()
 
 # Function to scan and store fingerprints values for the current position  and loaded into an RSSI_vector 
@@ -109,6 +109,11 @@ def kNN_3NN(cursor, table_name, mu_rssi_vector):
     for fingerprint in cursor.fetchall():
         rssi_string = fingerprint[4]  # fingerprint[4] contains the RSSI values as a string
         rssi_values = [int(value.strip()) for value in rssi_string.split(',')] # Convert the given string into a list of integers
+        
+        # Get the first x items from rssi_values, where x is the minimum length between rssi_values and mu_rssi_vector
+        #x = min(len(rssi_values), len(mu_rssi_vector))
+        #rssi_values = rssi_values[:x]
+        
         distance = euclidean_distance(mu_rssi_vector, rssi_values)
         distances.update( { (fingerprint[0],fingerprint[1]) : distance } )  # Store location and distance
     
