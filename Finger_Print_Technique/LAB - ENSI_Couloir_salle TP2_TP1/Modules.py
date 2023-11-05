@@ -8,6 +8,7 @@ import sqlite3
 import math
 
 
+
 # Function to initialize the database connection
 def initialize_database():
     conn = sqlite3.connect('wifi_fingerprints.db')
@@ -55,17 +56,30 @@ def delete_table(con,cur,table_name):
 
 
 # Function to scan and store fingerprints into database tables
-def store_fingerprint(conn,cur,iface,Area_name,RP_location,RP_ID):
+def store_fingerprint(conn, cur, iface, Area_name, RP_location, RP_ID):
     iface.scan()
     time.sleep(2)  # Wait for a moment to allow scanning to complete
-    RSSI_values = []
+    ssid_vector = [] #Wi-fi interface 
+    RSSI_values = [] #received signale stregth from each interface (respectively associated to the ssid_vector)
     scan_results = iface.scan_results()
+
+    
+    # Set a limit for the number of values you want (e.g., 5)
+    limit = 3
 
     for network in scan_results:
         bssid = network.bssid
         ssid = network.ssid
         signal_strength = network.signal
+        
+        ssid_vector.append(ssid)
         RSSI_values.append(signal_strength)
+        
+        if len(RSSI_values) >= limit:
+            break
+
+    # Convert the ssid_vector list to a string
+    ssid_vector_str = ', '.join(map(str, ssid_vector))        
     # Convert the RSSI_values list to a string
     rssi_values_str = ', '.join(map(str, RSSI_values))
 
@@ -75,7 +89,7 @@ def store_fingerprint(conn,cur,iface,Area_name,RP_location,RP_ID):
                PRIMARY KEY (nom, location_x, location_y))''')
     
     cur.execute(f'''INSERT INTO {Area_name} (nom, location_x, location_y, bssid, ssid, signal_strength) 
-                      VALUES (?, ?, ?, ?, ?, ?)''', (RP_ID, RP_location[0], RP_location[1], bssid, ssid, rssi_values_str))
+                      VALUES (?, ?, ?, ?, ?, ?)''', (RP_ID, RP_location[0], RP_location[1], bssid, ssid_vector_str, rssi_values_str))
     conn.commit()
 
 # Function to scan and store fingerprints values for the current position  and loaded into an RSSI_vector 
@@ -85,9 +99,18 @@ def store_fingerprint_rssivector(Tag_name):
     iface.scan()
     time.sleep(2)  # Wait for a moment to allow scanning to complete
     scan_results = iface.scan_results()
+    
+    # Set a limit for the number of values you want (e.g., 5)
+    limit = 3
+    
     for network in scan_results:
         signal_strength = network.signal
         rssi_vector.append(signal_strength)
+        
+
+        if len(rssi_vector) >= limit:
+            break
+
     print(f"Your Current Position Finger print:\n {Tag_name} : {rssi_vector}")
     return rssi_vector
 
@@ -107,15 +130,15 @@ def kNN_3NN(cursor, table_name, mu_rssi_vector):
     cursor.execute(f"SELECT * FROM {table_name}")
     
     for fingerprint in cursor.fetchall():
-        rssi_string = fingerprint[4]  # fingerprint[4] contains the RSSI values as a string
+        rssi_string = fingerprint[5]  # fingerprint[4] contains the RSSI values as a string
         rssi_values = [int(value.strip()) for value in rssi_string.split(',')] # Convert the given string into a list of integers
         
         # Get the first x items from rssi_values, where x is the minimum length between rssi_values and mu_rssi_vector
-        #x = min(len(rssi_values), len(mu_rssi_vector))
-        #rssi_values = rssi_values[:x]
+        # x = min(len(rssi_values), len(mu_rssi_vector))
+        # rssi_values = rssi_values[:x]
         
         distance = euclidean_distance(mu_rssi_vector, rssi_values)
-        distances.update( { (fingerprint[0],fingerprint[1]) : distance } )  # Store location and distance
+        distances.update( { (fingerprint[1],fingerprint[2]) : distance } )  # Store location and distance
     
     # Sort the distances dictionary by values in ascending order
     sorted_distances = {k: v for k, v in sorted(distances.items(), key=lambda item: item[1])}
