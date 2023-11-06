@@ -54,7 +54,7 @@ Enjoy using the Fingerprint-Based Indoor Localization Application!
 
 ### Environment Emulation
 
-![Grid Representation](Finger_Print_Technique\Images\Grid1.png)
+![Grid Representation](Finger_Print_Technique/Grid1.png)
 
 *This image illustrates a real world scenario while using the application to search for my position within my indoor home Environment.*
 
