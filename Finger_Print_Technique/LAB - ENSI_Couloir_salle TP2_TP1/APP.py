@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 #To access as an administrator
 correct_login = "chiheb"
-correct_password = "chichi123"
+correct_password = "chiheb123"
 
 ##User guide##
 print("\n\n/************User Guide***********/\n\n")

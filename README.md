@@ -7,15 +7,16 @@ The Indoor Positioning App is designed to help you define indoor environments, r
 ## Features
 
 ### 1. Define Indoor Environments
-- Use the name of the area as a label.
+- Use the name of the indoor area/enviroment as a label.
 - Record multiple reference points within an area, including location and Wi-Fi fingerprint data.
-- Update reference points within a specific area.
+- Update reference points (RP) within a specific area.
+- Diplay the recorded (RP) to emulate the enviroment.
 - Initialize a new area from scratch by recording new reference points.
 
 ### 2. Get Your Current Position (After Defining the Environment)
 - Enter the name of the area you are currently in using the "Am at" text field.
 - Provide a "Position Tag" to identify your exact current position.
-- Click the "Where am I" button to get your current position within the defined area.
+- Click the "Where am I" button to get your current position in the grid, representing the defined area.
 
 ## Admin Features
 
@@ -50,6 +51,12 @@ The Indoor Positioning App is designed to help you define indoor environments, r
 For admin access, use the provided login and password to access the admin section.
 
 Enjoy using the Fingerprint-Based Indoor Localization Application!
+
+### Environment Emulation
+
+![Application GUI](Finger_Print_Technique\Images\Grid.png)
+
+*This image illustrates a real world scenario while using the application to search for my position within my indoor home Environment.*
 
 ## Standalone Executable
 
