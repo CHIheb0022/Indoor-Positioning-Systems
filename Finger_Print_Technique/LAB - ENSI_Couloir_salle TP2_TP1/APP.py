@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import Modules as md
+import matplotlib.pyplot as plt 
 
 #To access as an administrator
 correct_login = "chiheb"
@@ -23,6 +24,7 @@ print("2_ Get your Current Psition (after defining the enviorement):\n",
 
 #Data base intialization
 conn, cur = md.initialize_database()
+
 
 def admin_config():    
     #Log available Enviorements
@@ -79,6 +81,13 @@ def scan():
     # Print table content after each update
     md.print_table_content(cur, area_name)
 
+    # Create a figure to display the grid 
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Visulaize each RP once added to the table
+    md.visualize_grid(cur,ax,area_name)
+
+
 #Delete the fingerprints within a specific table (to update RPs)
 def Delete_table_content():
     table_name = entry_Area.get()
@@ -118,10 +127,16 @@ def compute_position():
             # Create a pop-up message indicating the issues as a warning
             warning_text = f"\n\nUnknown Area.\nPlease provide reference points for {current_Area} Area!"
             messagebox.showwarning(f"Unable to pinpoint your exact location due to the following error", warning_text)
-
+    
     except Exception as e:
         print(f"An error occurred: {str(e)}")
+
+    #axes and figure variables 
+
+    fig, ax = plt.subplots(figsize=(8, 6))
     
+    #Visualize the grid
+    md.visualize_grid(cur, ax, current_Area, position)   
 
 def cancel():
     status_label.config(text="Data collection canceled")
@@ -217,19 +232,17 @@ scan_button.grid(row=5, padx=15, pady=10)
 scan_button = tk.Button(First_frame, text="Initialize Area", command=Delete_table_content, font=("Helvetica", 14), bg="gray", fg="white")
 scan_button.grid(row=6, padx=15, pady=10)
 
+# Label and entry for Area Name
+Am_at_label = tk.Label(Second_frame, text="Am at:", font=("Helvetica", 12), fg="blue")
+Am_at_label.grid(row=1, column=0, padx=10, pady=5)
+entry_Am_at = tk.Entry(Second_frame, font=("Helvetica", 12))
+entry_Am_at.grid(row=1, column=1, padx=10, pady=5)
 
 # Label and entry for Position Tag
 Position_label = tk.Label(Second_frame, text="Position Tag:", font=("Helvetica", 12), fg="blue")
-Position_label.grid(row=1, column=0, padx=10, pady=5)
+Position_label.grid(row=2, column=0, padx=10, pady=5)
 entry_Position = tk.Entry(Second_frame, font=("Helvetica", 12))
-entry_Position.grid(row=1, column=1, padx=10, pady=5)
-
-
-# Label and entry for Area Name
-Am_at_label = tk.Label(Second_frame, text="Am at:", font=("Helvetica", 12), fg="blue")
-Am_at_label.grid(row=2, column=0, padx=10, pady=5)
-entry_Am_at = tk.Entry(Second_frame, font=("Helvetica", 12))
-entry_Am_at.grid(row=2, column=1, padx=10, pady=5)
+entry_Position.grid(row=2, column=1, padx=10, pady=5)
 
 # Button to compute position
 compute_position_button = tk.Button(Second_frame, text="Where Exactly ?", command= lambda : compute_position(), font=("Helvetica", 14), bg="blue", fg="white")

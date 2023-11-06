@@ -6,6 +6,8 @@ import pywifi
 import time
 import sqlite3
 import math
+import matplotlib.pyplot as plt 
+from matplotlib.ticker import MaxNLocator
 
 
 
@@ -168,4 +170,89 @@ def kNN_3NN(cursor, table_name, mu_rssi_vector):
     return estimated_location
 
 
+# Function to visualize the grid
+def visualize_grid(cur,ax,area_name,computed_positions=[]):
+    
+    #Get the area's reference points coordinates 
+    RP_List = []
+    try:
+        cur.execute(f"SELECT nom, location_x, location_y FROM {area_name}")
+        rows = cur.fetchall()
+        if not rows:
+            print(f"The table '{area_name}' is empty.")
+        else:
+            for row in rows :
+                RP_List.append((row[1],row[2]))
 
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+    # Create a variable to track if the label has been used
+    label_used = False
+
+    # Iterate through reference points and plot them as red circles
+    for point in RP_List:
+        x, y = point[0], point[1]
+        if not label_used:
+            ax.scatter(x, y, color='red', marker='o', label='Reference Points')
+            label_used = True
+        else:
+            ax.scatter(x, y, color='red', marker='o')
+
+    # plot the computed positions as blue triangles
+    if computed_positions:
+        x, y = computed_positions[0], computed_positions[1]
+        ax.scatter(x, y, color='blue', marker='^', label='Computed Position')
+    
+
+    # Add labels and legend
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_title(f'Grid Emulating the {area_name} Area')
+    # Display the Legend  
+    plt.legend(loc='upper right', markerscale=1, labelspacing=1, handletextpad=2)
+
+    # Set the y-axis to not display only integer values
+    ax.yaxis.set_major_locator(plt.MaxNLocator(integer=False))
+    # By default, Matplotlib will try to optimize the axis labels to show only integer values
+
+    # Display the grid
+    plt.grid(True)
+
+    # Update the figure
+    plt.draw()
+    plt.pause(0.01)
+
+    """
+    In case u want to add a title to the plot window u need to configure a master window using Tkinter
+    Use a function to create a fig and name it using canvas module and return a global variable fig
+    than in visualize_grid function create a subplot recording the X,Y axes. connected to the fig master 
+
+    
+
+    import tkinter as tk
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+    def create_figure(area_name):
+        # Create a new figure with a unique name (window title)
+        fig = Figure(figsize=(8, 6))
+        fig.canvas.set_window_title(area_name)
+        return fig
+
+    def visualize_grid(fig, reference_points, computed_positions=[]):
+        # Get the TkAgg canvas from the figure
+        canvas = FigureCanvasTkAgg(fig, master=plot_window)
+        canvas.get_tk_widget().pack()
+
+        # Create a subplot within the Figure
+        ax = fig.add_subplot(111)
+
+        # Your plotting code here...
+
+        # Update the canvas
+        canvas.draw()
+        canvas.get_tk_widget().update_idletasks()
+
+        return fig
+        """
